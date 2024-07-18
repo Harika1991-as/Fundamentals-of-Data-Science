@@ -1,0 +1,43 @@
+import pandas as pd
+import random
+
+# Create a sample dataset
+data = []
+for i in range(1, 101):  # Simulate 100 orders
+    customer_id = random.randint(1, 20)  # 20 unique customers
+    product_id = random.randint(1, 50)  # 50 unique products
+    quantity = random.randint(1, 5)
+    total_price = quantity * random.uniform(10, 100)  # Random price between 10 and 100
+    data.append({'OrderID': i, 'CustomerID': customer_id, 'ProductID': product_id, 'Quantity': quantity, 'TotalPrice': total_price})
+
+df = pd.DataFrame(data)
+
+# Print the first 5 rows
+print(df.head())
+
+# Analyze customer orders
+total_orders = df.shape[0]
+print(f"Total number of orders: {total_orders}")
+
+# Most frequent products
+most_popular = df['ProductID'].value_counts().nlargest(5)
+print(f"\nMost frequent products (Top 5):\n{most_popular}")
+
+# Orders per customer
+orders_per_customer = df.groupby('CustomerID')['OrderID'].count()
+print(f"\nOrders per customer (Sample 5):\n{orders_per_customer.head()}")
+
+# Average order value, total revenue
+avg_order_value = df['TotalPrice'].mean()
+total_revenue = df['TotalPrice'].sum()
+print(f"\nAverage order value: ${avg_order_value:.2f}")
+print(f"Total revenue: ${total_revenue:.2f}")
+
+# **Comment out these lines if you don't have a 'Category' column**
+# Filter orders for a specific product category
+# category_filter = df[df['Category'] == 'Electronics']
+# print(f"\nOrders for Electronics category (Sample 3):\n{category_filter.head(3)}")
+
+# Customer Lifetime Value (CLTV)
+customer_cltv = df.groupby('CustomerID')['TotalPrice'].sum()
+print(f"\nTop 3 customers by CLTV:\n{customer_cltv.nlargest(3)}")
